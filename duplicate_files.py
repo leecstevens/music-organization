@@ -31,7 +31,7 @@ def startup():
         log += scan_logs
     log += shared.file.file_action(delete_list, False if not take_action else shared.input.truefalse(settings['del_deletelist']),'delete','system files')
     log += shared.file.file_action(dupe_list, False if not take_action else shared.input.truefalse(settings['del_duplicates']),'delete','duplicate files')
+    log += shared.file.file_action(ignore_list, False if not take_action else shared.input.truefalse(settings['del_duplicates']),'delete','ignorable files')
     log += shared.file.file_action(rename_list, False if not take_action else shared.input.truefalse(settings['ren_numbered']),'rename','rename numbered files')
-    #log += shared.file.file_action(dupe_list, False if not take_action else shared.input.truefalse(settings['del_duplicates']),'delete','duplicate files')
     shared.file.dump_log(settings['logfile'],log)
 startup()

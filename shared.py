@@ -75,10 +75,8 @@ class file:
                         scan_log.append('Found File Combo: %s - %s' % (name, newname))
 
                 for i in range(1,10):
-                    #newname = name[:-4] + str(i) + name[-4::]
                     dir = '/'.join(name.split('/')[:-1])
                     newname = dir + '/' + name.split('/')[-1].split('.')[0]+' '+str(i)+'.'+name.split('.')[-1]
-
                     if name in filelist and newname in filelist:
                         dupe_list.append(newname)
                         filelist.remove(newname)
