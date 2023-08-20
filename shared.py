@@ -41,6 +41,20 @@ class file:
                 filelist.append(os.path.join(root,file))
         return filelist
     
+    def process(filelist, ext):
+        file_list = []
+        dupe_list= []
+        rename_list = []
+        ignore_list = []
+        extensions = tuple(list(ext.split(',')))
+        print (extensions)
+        for i in range(len(extensions)):
+            pass
+
+
+
+        return file_list,dupe_list,rename_list,ignore_list
+    
     def dump_log(logfile, log):
         log_file = open(logfile,'w')
         for item in log:

@@ -22,9 +22,10 @@ log = []
 def startup():
     global settings
     settings = shared.settings.read()
-    print(settings)
     log.append('Searching folder: %s' % (settings['music_folder']))
     filelist = shared.file.list_path(settings['music_folder'])
     log.append('Found %s files in the folder and subfolders.' % (len(filelist)))
+    file_list,dupe_list,rename_list,ignore_list = shared.file.process(filelist,settings['extensions'])
     shared.file.dump_log(settings['logfile'],log)
+
 startup()
