@@ -25,7 +25,7 @@ class settings:
             for line in tmp_settings:
                 val = line
                 if val[0] != '#':
-                    ret_settings[val.split(':')[0]] = val.split(':')[1]
+                    ret_settings[val.split(':')[0]] = val.split(':')[1].replace('\n','')
             
             return ret_settings
         except FileNotFoundError:
@@ -40,3 +40,9 @@ class file:
             for file in files:
                 filelist.append(os.path.join(root,file))
         return filelist
+    
+    def dump_log(logfile, log):
+        log_file = open(logfile,'w')
+        for item in log:
+            log_file.write(item+'\n')
+        log_file.close() 

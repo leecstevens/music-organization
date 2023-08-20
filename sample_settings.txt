@@ -3,3 +3,5 @@
 # Structure is simple (please keep this simple):
 # setting:value
 music_folder:music
+extensions:.m4a,.mp3,.wav
+logfile:logfile.txt
