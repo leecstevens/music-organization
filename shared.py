@@ -75,7 +75,10 @@ class file:
                         scan_log.append('Found File Combo: %s - %s' % (name, newname))
 
                 for i in range(1,5):
-                    newname = name[:-4] + str(i) + name[-4::]
+                    #newname = name[:-4] + str(i) + name[-4::]
+                    dir = '/'.join(name.split('/')[:-1])
+                    newname = dir + '/' + name.split('/')[-1].split('.')[0]+' '+str(i)+'.'+name.split('.')[-1]
+
                     if name in filelist and newname in filelist:
                         dupe_list.append(newname)
                         filelist.remove(newname)
@@ -95,6 +98,21 @@ class file:
         
         return scan_log,filelist,dupe_list,delete_list,rename_list,ignore_list
     
+    def delete_files(filelist, take_action):
+        logs = ['','File Deletion Results: ']
+        if take_action:
+            pre = ''
+            logs.append('Take action is enabled, we will be deleting files.')
+        else:
+            pre = '(Log Only) NOT '
+            logs.append(pre+'deleting anything.')
+            logs.append('Only logging here, not actually deleting.')
+
+        for name in filelist:
+            logs.append(pre+'Deleting File: %s' % (name))
+            #os.remove(i)
+        return logs
+
     def dump_log(logfile, log):
         log_file = open(logfile,'w')
         for item in log:
