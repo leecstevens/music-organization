@@ -19,7 +19,10 @@ import shared
 settings = {}
 
 def startup():
+    global settings
     settings = shared.settings.read()
     print(settings)
+    
 
 startup()
+print (settings['music_folder'])
