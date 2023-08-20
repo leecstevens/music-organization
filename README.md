@@ -1,10 +1,12 @@
 # music-organization
 
-This was a project that was started as a "Screw You, Apple" project after calling their support and finding a "Scorched Earth" way of organizing all of my massive music collection WITHOUT having to manually choose file by file.
+This was a project that was started as a "Screw You, Apple" statement after calling their support and finding a "Scorched Earth" way of organizing all of my massive music collection WITHOUT having to manually choose file by file.
 
 I was told in order to remove duplicates from my library I needed to "Command-Click" every file individually and then delete said entry from the library.
 
 This was WAY too time consuming and I had over 25,000 entries to delete.  So, this project is 2 seperate processes, one to organize files, and another to organize metadata.
+
+By the way, to scorch the data in Apple Music, just go to the song view, select all your songs, and delete from library, and yes, add to the trash.  Hope you read this part before doing the former...  You better have a backup of your file system with all your music in it first.  :)
 
 # Before you begin - IMPORTANT
 
@@ -43,3 +45,10 @@ I am someone who badly neglected their digital music collection for over 20 year
 Enjoy the code, but again, don't just run it.  If bad things happen to you, I will laugh at your complaints and cries.  If you were stupid enough not to play with safe data, there is really no hope for you or your music collection.  Did I drive that home enough?
 
 It is my hope this code will be a benefit to you, and to those of you learning Python, something to learn from.
+
+# Changes / Suggestions
+Since there is not much to change yet, I'll leave this blank for now.
+
+# How to use
+
+To be added here, don't get too excited yet.
