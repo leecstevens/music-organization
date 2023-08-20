@@ -33,6 +33,14 @@ class settings:
         except:
             print('Something is really messed up beyond a standard file not found.\nLooking for %s.' % (settings_file))
 
+class input:
+    def truefalse(answer):
+        a = answer.lower()
+        if 'yes' in a or 'true' in a or a == 'y':
+            return True
+        else:
+            return False
+
 class file:
     def list_path(path):
         filelist = []
@@ -82,7 +90,7 @@ class file:
                     filename = ' '.join(filename.split(' ')[1::])
                     newname = ''.join(fullname)+'/'+filename
                     rename_list.append(newname)
-                    scan_log.append('Found Leading Numbered File: %s' % (newname))
+                    scan_log.append('Found Leading Numbered File: %s' % (name))
                     filelist.remove(name)        
         
         return scan_log,filelist,dupe_list,delete_list,rename_list,ignore_list

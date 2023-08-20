@@ -16,12 +16,12 @@
 """
 
 import shared
-settings = {}
-log = []
 
 def startup():
-    global settings, log
+    log = []
+    settings = {}
     settings = shared.settings.read()
+    log_only = shared.input.truefalse(settings['log_only'])
     log.append('Searching folder: %s' % (settings['music_folder']))
     filelist = shared.file.list_path(settings['music_folder'])
     log.append('Found %s files in the folder and subfolders.' % (len(filelist)))
@@ -29,5 +29,4 @@ def startup():
     log.append('Scan findings: \nNo Modifications Needed: %s\nDuplicates: %s\nRenames Needed: %s\nIgnored Files: %s\nDeleted Files: %s' % (len(file_list),len(dupe_list),len(rename_list),len(ignore_list),len(delete_list)))
     log += scan_logs
     shared.file.dump_log(settings['logfile'],log)
-
 startup()
