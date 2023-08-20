@@ -1,8 +1,8 @@
 # music-organization
 
-This was a project that was started as a "Screw You, Apple" statement after calling their support and finding a "Scorched Earth" way of organizing all of my massive music collection WITHOUT having to manually choose file by file.
+This was a project that was started as a "Screw You, Apple" statement after calling their support looking for a "Scorched Earth" way of organizing all of my massive music collection WITHOUT having to manually choose file by file.
 
-I was told in order to remove duplicates from my library I needed to "Command-Click" every file individually and then delete said entry from the library.
+I was told by Apple in order to remove duplicates from my library I needed to "Command-Click" every file individually and then delete said entry from the library.
 
 This was WAY too time consuming and I had over 25,000 entries to delete.  So, this project is 2 seperate processes, one to organize files, and another to organize metadata.
 
