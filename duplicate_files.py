@@ -25,7 +25,8 @@ def startup():
     log.append('Searching folder: %s' % (settings['music_folder']))
     filelist = shared.file.list_path(settings['music_folder'])
     log.append('Found %s files in the folder and subfolders.' % (len(filelist)))
-    file_list,dupe_list,rename_list,ignore_list = shared.file.process(filelist,settings['extensions'])
+    file_list,dupe_list,delete_list,rename_list,ignore_list = shared.file.process(filelist,settings['extensions'])
+    log.append('Scan findings: \nNew File List: %s\nDuplicates: %s\nRenames: %s\nIgnored Files: %s\nDeleted Files: %s' % (len(file_list),len(dupe_list),len(rename_list),len(ignore_list),len(delete_list)))
     shared.file.dump_log(settings['logfile'],log)
-
+    
 startup()

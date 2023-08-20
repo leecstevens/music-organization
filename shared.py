@@ -42,18 +42,45 @@ class file:
         return filelist
     
     def process(filelist, ext):
-        file_list = []
-        dupe_list= []
+        dupe_list = []
+        delete_list = []
         rename_list = []
         ignore_list = []
         extensions = tuple(list(ext.split(',')))
-        print (extensions)
-        for i in range(len(extensions)):
-            pass
+        for name in filelist:
+            lower_name = name.lower()
+            if '.ds_store' in lower_name:
+                delete_list.append(name)
+                filelist.remove(name)
+            elif not lower_name.endswith(extensions):
+                ignore_list.append(name)
+                filelist.remove(name)
+            else:
+                if 'm4a' in name:
+                    newname = name[:-4]+'.mp3'
+                    if newname in [f.lower() for f in filelist]:
+                        dupe_list.append(newname)
+                        filelist.remove(name)
+                for i in range(1,5):
+                    newname = name[:-4] + str(i) + name[-4::]
+                    if name in filelist and newname in filelist:
+                        dupe_list.append(newname)
+                        filelist.remove(newname)
+        
+        for name in filelist:
+            fullname = os.path.split(name)[0]
+            filename = os.path.split(name)[1]
+            
+            if filename.split(' ')[0].isnumeric():
+                if int(filename.split(' ')[0]) <= 20:
+                    filename = ' '.join(filename.split(' ')[1::])
+                    newname = '/'.join(fullname)+'/'+filename
+                    rename_list.append(newname)
 
 
 
-        return file_list,dupe_list,rename_list,ignore_list
+
+        return filelist,dupe_list,delete_list,rename_list,ignore_list
     
     def dump_log(logfile, log):
         log_file = open(logfile,'w')
