@@ -21,8 +21,5 @@ settings = {}
 def startup():
     global settings
     settings = shared.settings.read()
-    print(settings)
-    
-
+    filelist = shared.file.list_path(settings['music_folder'])
 startup()
-print (settings['music_folder'])
