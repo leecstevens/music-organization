@@ -6,6 +6,8 @@ music_folder:music
 extensions:.m4a,.mp3,.wav
 logfile:logfile.txt
 show_scanlogs:false
+# With scan_only, take_action has no effect or any cascaded options.
+scan_only:true
 #if take_action is true, then the below del_ and ren_ settings have no meaning.
 take_action:false
 del_duplicates:true

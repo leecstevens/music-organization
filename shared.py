@@ -10,7 +10,7 @@
 
 """
 
-import os
+import os, time
 
 # Just to make it easy, leave any global vars at the top, so it will be easier to find.
 settings_file = 'settings.txt'
@@ -109,11 +109,12 @@ class file:
             logtext = pre+action.title()+': '
             if action == 'delete':
                 logtext += '%s' % (name)
-                #print (logtext)
-                #os.remove(name)
+                os.remove(name)
             elif action == 'rename':
-                logtext += name.split('||')[0] + ' to ' + name.split('||')[1]
-                #os.rename(name.split('||'[0], name.split('||')[1]))
+                src = name.split('||')[0]
+                dest = name.split('||')[1]
+                logtext += '%s to %s' % (src, dest)
+                os.rename(src, dest)
             logs.append(logtext)
         return logs
 
