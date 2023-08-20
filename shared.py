@@ -46,26 +46,32 @@ class file:
         delete_list = []
         rename_list = []
         ignore_list = []
+        scan_log = ['','Scan Results:']
         extensions = tuple(list(ext.split(',')))
         for name in filelist:
             lower_name = name.lower()
             if '.ds_store' in lower_name:
                 delete_list.append(name)
                 filelist.remove(name)
+                scan_log.append('Found OS File: %s' % (name))
             elif not lower_name.endswith(extensions):
                 ignore_list.append(name)
                 filelist.remove(name)
+                scan_log.append('Found Ignorable File: %s' % (name))
             else:
                 if 'm4a' in name:
                     newname = name[:-4]+'.mp3'
                     if newname in [f.lower() for f in filelist]:
                         dupe_list.append(newname)
                         filelist.remove(name)
+                        scan_log.append('Found File Combo: %s - %s' % (name, newname))
+
                 for i in range(1,5):
                     newname = name[:-4] + str(i) + name[-4::]
                     if name in filelist and newname in filelist:
                         dupe_list.append(newname)
                         filelist.remove(newname)
+                        scan_log.append('Found Training Duplicate: %s' % (name))
         
         for name in filelist:
             fullname = os.path.split(name)[0]
@@ -74,13 +80,12 @@ class file:
             if filename.split(' ')[0].isnumeric():
                 if int(filename.split(' ')[0]) <= 20:
                     filename = ' '.join(filename.split(' ')[1::])
-                    newname = '/'.join(fullname)+'/'+filename
+                    newname = ''.join(fullname)+'/'+filename
                     rename_list.append(newname)
-
-
-
-
-        return filelist,dupe_list,delete_list,rename_list,ignore_list
+                    scan_log.append('Found Leading Numbered File: %s' % (newname))
+                    filelist.remove(name)        
+        
+        return scan_log,filelist,dupe_list,delete_list,rename_list,ignore_list
     
     def dump_log(logfile, log):
         log_file = open(logfile,'w')

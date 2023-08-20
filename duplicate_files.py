@@ -20,13 +20,14 @@ settings = {}
 log = []
 
 def startup():
-    global settings
+    global settings, log
     settings = shared.settings.read()
     log.append('Searching folder: %s' % (settings['music_folder']))
     filelist = shared.file.list_path(settings['music_folder'])
     log.append('Found %s files in the folder and subfolders.' % (len(filelist)))
-    file_list,dupe_list,delete_list,rename_list,ignore_list = shared.file.process(filelist,settings['extensions'])
-    log.append('Scan findings: \nNew File List: %s\nDuplicates: %s\nRenames: %s\nIgnored Files: %s\nDeleted Files: %s' % (len(file_list),len(dupe_list),len(rename_list),len(ignore_list),len(delete_list)))
+    scan_logs,file_list,dupe_list,delete_list,rename_list,ignore_list = shared.file.process(filelist,settings['extensions'])
+    log.append('Scan findings: \nNo Modifications Needed: %s\nDuplicates: %s\nRenames Needed: %s\nIgnored Files: %s\nDeleted Files: %s' % (len(file_list),len(dupe_list),len(rename_list),len(ignore_list),len(delete_list)))
+    log += scan_logs
     shared.file.dump_log(settings['logfile'],log)
-    
+
 startup()
