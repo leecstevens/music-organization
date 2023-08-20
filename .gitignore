@@ -1,3 +1,6 @@
 .DS_Store
+__pycache__
 scratch.py
-config.txt
+settings.txt
+music/
+music.backup/

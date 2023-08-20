@@ -1,0 +1,5 @@
+# Music Cleanup Configuration File - Lee Stevens
+# This is a sample config file.
+# Structure is simple (please keep this simple):
+# setting:value
+music_folder:music
