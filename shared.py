@@ -74,7 +74,7 @@ class file:
                         filelist.remove(name)
                         scan_log.append('Found File Combo: %s - %s' % (name, newname))
 
-                for i in range(1,5):
+                for i in range(1,10):
                     #newname = name[:-4] + str(i) + name[-4::]
                     dir = '/'.join(name.split('/')[:-1])
                     newname = dir + '/' + name.split('/')[-1].split('.')[0]+' '+str(i)+'.'+name.split('.')[-1]
@@ -92,25 +92,31 @@ class file:
                 if int(filename.split(' ')[0]) <= 20:
                     filename = ' '.join(filename.split(' ')[1::])
                     newname = ''.join(fullname)+'/'+filename
-                    rename_list.append(newname)
+                    rename_list.append(name+'||'+newname)
                     scan_log.append('Found Leading Numbered File: %s' % (name))
                     filelist.remove(name)        
         
         return scan_log,filelist,dupe_list,delete_list,rename_list,ignore_list
     
-    def delete_files(filelist, take_action):
-        logs = ['','File Deletion Results: ']
+    def file_action(filelist, take_action,action,type):
+        logs = ['','File Action: '+action.title()+ ' of '+type.title()]
         if take_action:
             pre = ''
-            logs.append('Take action is enabled, we will be deleting files.')
+            logs.append('Take action is enabled, we will %s files.' % (action))
         else:
-            pre = '(Log Only) NOT '
-            logs.append(pre+'deleting anything.')
-            logs.append('Only logging here, not actually deleting.')
+            pre = '(Log Only) '
+            logs.append('Only logging here, not actually going to %s.' % (action))
 
         for name in filelist:
-            logs.append(pre+'Deleting File: %s' % (name))
-            #os.remove(i)
+            logtext = pre+action.title()+': '
+            if action == 'delete':
+                logtext += '%s' % (name)
+                #print (logtext)
+                #os.remove(name)
+            elif action == 'rename':
+                logtext += name.split('||')[0] + ' to ' + name.split('||')[1]
+                #os.rename(name.split('||'[0], name.split('||')[1]))
+            logs.append(logtext)
         return logs
 
     def dump_log(logfile, log):

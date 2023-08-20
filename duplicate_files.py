@@ -29,7 +29,9 @@ def startup():
     log.append('\nScan findings: \nNo Modifications Needed: %s\nDuplicates: %s\nRenames Needed: %s\nIgnored Files: %s\nDeleted Files: %s' % (len(file_list),len(dupe_list),len(rename_list),len(ignore_list),len(delete_list)))
     if shared.input.truefalse(settings['show_scanlogs']):
         log += scan_logs
-    log += shared.file.delete_files(delete_list, False if not take_action else shared.input.truefalse(settings['del_deletelist']))
-    log += shared.file.delete_files(dupe_list, False if not take_action else shared.input.truefalse(settings['del_duplicates']))
+    log += shared.file.file_action(delete_list, False if not take_action else shared.input.truefalse(settings['del_deletelist']),'delete','system files')
+    log += shared.file.file_action(dupe_list, False if not take_action else shared.input.truefalse(settings['del_duplicates']),'delete','duplicate files')
+    log += shared.file.file_action(rename_list, False if not take_action else shared.input.truefalse(settings['ren_numbered']),'rename','rename numbered files')
+    #log += shared.file.file_action(dupe_list, False if not take_action else shared.input.truefalse(settings['del_duplicates']),'delete','duplicate files')
     shared.file.dump_log(settings['logfile'],log)
 startup()
