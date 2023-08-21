@@ -46,9 +46,29 @@ Enjoy the code, but again, don't just run it.  If bad things happen to you, I wi
 
 It is my hope this code will be a benefit to you, and to those of you learning Python, something to learn from.
 
+# Screenshots of use/features
+
+This is what the main scan-only option looks like.  It will go through and look for duplicate files, files that may need renaming, etc.  Scan-only will only give you statistics.
+
+![](./img/music_scanonly.jpg)
+
+The logging only mode will actually go through and give detailed analysis of what needs to happen.  Known as "take_action" in settings, if it set to false, then it will enter a logging only mode.  It will do everything except actually take a file action.
+
+![](./img/music_log_delete.jpg)
+
+![](./img/music_log_rename.jpg)
+
+The settings are configured in a simple text file (included as a sample in the repo)
+
+![](./img/music_sample_settings.jpg)
+
 # Changes / Suggestions
 Since there is not much to change yet, I'll leave this blank for now.
 
 # How to use
 
 To be added here, don't get too excited yet.
+
+# Known Issues
+
+This script is not multithreaded, so it may take a couple of runs to finally delete and rename everything.  Plans are to fix this in the future.
