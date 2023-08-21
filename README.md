@@ -40,6 +40,12 @@ I'm sure more will come up over time, but this is my first thoughts.
 
 I am someone who badly neglected their digital music collection for over 20 years, so now enough is enough.
 
+# Dependencies
+
+There is one dependency, music_tag which is installable by pip.  This is only needed if you want to do the MP3 tagging.  It is part of the file_tags.py file, and kept it away as a shared component.  Then again, if you don't want to do MP3 tagging, why are you using this repo or wanting this code?
+
+Well, the file cleanup is free from needing music_tag at least.
+
 # Lastly...
 
 Enjoy the code, but again, don't just run it.  If bad things happen to you, I will laugh at your complaints and cries.  If you were stupid enough not to play with safe data, there is really no hope for you or your music collection.  Did I drive that home enough?

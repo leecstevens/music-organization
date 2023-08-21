@@ -10,7 +10,7 @@
 
 """
 
-import os, time
+import os
 
 # Just to make it easy, leave any global vars at the top, so it will be easier to find.
 settings_file = 'settings.txt'
@@ -49,6 +49,16 @@ class file:
                 filelist.append(os.path.join(root,file))
         return filelist
     
+    def get_music_files(filelist, ext):
+        scan_log = ['','Music File Scan']
+        extensions = tuple(list(ext.split(',')))
+        for name in filelist:
+            lower_name = name.lower()
+            if not lower_name.endswith(extensions):
+                filelist.remove(name)
+        scan_log.append('Found %s files with music extensions' % (len(filelist)))
+        return scan_log, filelist
+
     def process(filelist, ext):
         dupe_list = []
         delete_list = []
