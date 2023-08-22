@@ -23,9 +23,15 @@ class settings:
             tmp_settings = file.readlines()
         
             for line in tmp_settings:
-                val = line
-                if val[0] != '#':
-                    ret_settings[val.split(':')[0]] = val.split(':')[1].replace('\n','')
+                
+                if line[0] != '#':
+                    key = line.split('||')[0]
+                    val = line.split('||')[1].replace('\n', '')
+                    if key.lower() == 'extensions':
+                        val = tuple(val.split(','))
+                    elif key.lower() == 'delims':
+                        val = tuple(map(lambda i:i.replace('\'',''),val.split(',')))
+                    ret_settings[key] = val
             
             return ret_settings
         except FileNotFoundError:
@@ -51,10 +57,9 @@ class file:
     
     def get_music_files(filelist, ext):
         scan_log = ['','Music File Scan']
-        extensions = tuple(list(ext.split(',')))
         for name in filelist:
             lower_name = name.lower()
-            if not lower_name.endswith(extensions):
+            if not lower_name.endswith(ext):
                 filelist.remove(name)
         scan_log.append('Found %s files with music extensions' % (len(filelist)))
         return scan_log, filelist
@@ -65,14 +70,13 @@ class file:
         rename_list = []
         ignore_list = []
         scan_log = ['','Scan Results:']
-        extensions = tuple(list(ext.split(',')))
         for name in filelist:
             lower_name = name.lower()
             if '.ds_store' in lower_name:
                 delete_list.append(name)
                 filelist.remove(name)
                 scan_log.append('Found OS File: %s' % (name))
-            elif not lower_name.endswith(extensions):
+            elif not lower_name.endswith(ext):
                 ignore_list.append(name)
                 filelist.remove(name)
                 scan_log.append('Found Ignorable File: %s' % (name))

@@ -17,7 +17,7 @@ def process_tags(filelist,take_action):
         artist = file['artist']
         albumartist = file['albumartist']
         composer = file['composer']
-        #print('File: %s\nTitle: %s\nArtist: %s\nAlbum Artist: %s\nComposer: %s\n' % (name,title,artist,albumartist,composer))
+        scan_log.append('File: %s\nTitle: %s\nArtist: %s\nAlbum Artist: %s\nComposer: %s\n' % (name,title,artist,albumartist,composer))
     return (scan_log)
 
 def startup():
