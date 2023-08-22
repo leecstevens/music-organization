@@ -27,12 +27,13 @@ class settings:
                 if line[0] != '#':
                     key = line.split('||')[0]
                     val = line.split('||')[1].replace('\n', '')
-                    if key.lower() == 'extensions':
+                    if key.lower() == 'extensions' or key.lower() == 'replace_chars':
                         val = tuple(val.split(','))
                     elif key.lower() == 'delims':
                         val = tuple(map(lambda i:i.replace('\'',''),val.split(',')))
                     ret_settings[key] = val
-            
+                
+            print(ret_settings)
             return ret_settings
         except FileNotFoundError:
             print('File is missing.  Make sure you have a %s in the script folder.' % (settings_file))
