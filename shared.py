@@ -10,12 +10,17 @@
 
 """
 
-import os
+import os, platform
 
 # Just to make it easy, leave any global vars at the top, so it will be easier to find.
 settings_file = 'settings.txt'
 
 class settings:
+    def get(name):
+        tmp = settings.read()
+        if tmp[name] != None:
+            return tmp[name]
+
     def read():
         ret_settings = {}
         try:
@@ -32,8 +37,6 @@ class settings:
                     elif key.lower() == 'delims':
                         val = tuple(map(lambda i:i.replace('\'',''),val.split(',')))
                     ret_settings[key] = val
-                
-            print(ret_settings)
             return ret_settings
         except FileNotFoundError:
             print('File is missing.  Make sure you have a %s in the script folder.' % (settings_file))
@@ -48,7 +51,26 @@ class input:
         else:
             return False
 
+class format:
+    def replace_chars(item, chars):
+        for i in range(len(chars)):
+            se = chars[i].split(':')[0]
+            re = chars[i].split(':')[1]
+            item = item.replace(se, re)
+        return item
+
 class file:
+    def artist_folder(folder):
+        f = os.path.join(folder)
+        if platform.system().lower() == 'windows':
+            delim = '\\'
+            pos = 2
+        else:
+            delim = '/'
+            pos = 1
+        return f.split(delim)[pos]
+    
+
     def list_path(path):
         filelist = []
         for root, dirs, files in os.walk(path):
