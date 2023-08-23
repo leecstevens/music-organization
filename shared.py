@@ -212,13 +212,7 @@ class file:
     
     def file_action(filelist, take_action,action,type):
         logs = ['','File Action: '+action.title()+ ' of '+type.title()]
-        if take_action:
-            pre = ''
-            logs.append('Take action is enabled, we will %s files.' % (action))
-        else:
-            pre = '(Log Only) '
-            logs.append('Only logging here, not actually going to %s.' % (action))
-
+        pre = '' if take_action == True else '(Log Only) '
         for name in filelist:
             logtext = pre+action.title()+': '
             if action == 'delete':

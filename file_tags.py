@@ -46,7 +46,6 @@ def resolve_tag(artist, albumartist, folder):
         if len(artist) > 0 and len(albumartist) == 0:
             resolved = artist
         elif len(artist) == 0 and len(albumartist) == 0:
-            print('')
             resolved = shared.file.artist_folder(folder)
         elif 'unknown' in artist.lower():
             if 'unknown' not in albumartist.lower() and len(albumartist) > 2:
@@ -87,7 +86,9 @@ def process_tags(filelist,take_action):
                 if str(file['album']) == '':
                     a = shared.file.artist_album(name)
                     file['album'] = a if (a != '' and 'unknown' not in a.lower()) else resolved
-
+        file['artist'] = resolved
+        if shared.settings.get('same_string') == True:
+            file['albumartist'] = resolved
         scan_log.append('Title: %s\nArtist: %s\nAlbum Artist: %s\nResolved: %s' % (title,artist,albumartist,resolved))
         scan_log.append('%spdating file: %s\n' % ('U' if take_action else '(Log Only) Not u', name))
         if take_action:
@@ -98,13 +99,15 @@ def startup():
     log = []
     settings = {}
     settings = shared.settings.read()
+    scan_only = shared.input.truefalse(settings['take_action'])
     take_action = shared.input.truefalse(settings['take_action'])
+    act = True if take_action == True or scan_only == False else False
     log.append('Searching folder: %s' % (settings['music_folder']))
     filelist = shared.file.list_path(settings['music_folder'])
     log.append('Found %s files in the folder and subfolders.' % (len(filelist)))
     scan_logs,filelist = shared.file.get_music_files(filelist, settings['extensions'])
     log += scan_logs
-    log += process_tags(filelist, take_action)
+    log += process_tags(filelist, act)
     shared.file.dump_log(settings['logfile'],log)
     
 startup()
