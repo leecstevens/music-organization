@@ -87,7 +87,7 @@ def process_tags(filelist,take_action):
                     a = shared.file.artist_album(name)
                     file['album'] = a if (a != '' and 'unknown' not in a.lower()) else resolved
         file['artist'] = resolved
-        if shared.settings.get('same_string') == True:
+        if shared.input.truefalse(shared.settings.get('same_string')) == True:
             file['albumartist'] = resolved
         scan_log.append('Title: %s\nArtist: %s\nAlbum Artist: %s\nResolved: %s' % (title,artist,albumartist,resolved))
         scan_log.append('%spdating file: %s\n' % ('U' if take_action else '(Log Only) Not u', name))
@@ -99,7 +99,7 @@ def startup():
     log = []
     settings = {}
     settings = shared.settings.read()
-    scan_only = shared.input.truefalse(settings['take_action'])
+    scan_only = shared.input.truefalse(settings['scan_only'])
     take_action = shared.input.truefalse(settings['take_action'])
     act = True if take_action == True or scan_only == False else False
     log.append('Searching folder: %s' % (settings['music_folder']))
