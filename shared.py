@@ -33,6 +33,18 @@ class settings:
         except:
             print('No safe artists found.')
 
+    def get_final_tag_actions():
+        try:
+            file = open('final_clean.txt','r')
+            final_clean = []
+            s = file.readlines()
+            for i in s:
+                if i[0] != '#':
+                    final_clean.append(i.replace('\n', ''))
+            return tuple(final_clean)
+        except:
+            print('No safe artists found.')
+
     def read():
         ret_settings = {}
         try:

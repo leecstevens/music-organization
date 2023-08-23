@@ -27,6 +27,23 @@ def ret_artist(artist):
         
         return artist
 
+def final_clean(artist):
+    if shared.format.has_delims(artist):
+        artist = ret_artist(artist)
+    final_actions = shared.settings.get_final_tag_actions()
+    for item in final_actions:
+        action = item.split('||')[0].lower()
+        src = item.split('||')[1].lower()
+        to = item.split('||')[2]
+        if action == 'replace':
+            if src == artist.lower():
+                artist = to
+        elif action == 'in':
+            if src in artist.lower():
+                artist = to
+    return artist
+
+
 def resolve_tag(artist, albumartist, folder):
     scan_log = ['','Resolving tags']
     resolved = ''
@@ -54,8 +71,7 @@ def resolve_tag(artist, albumartist, folder):
     else:
         resolved = artist
 
-    if shared.format.has_delims(resolved):
-        resolved = ret_artist(resolved)
+    resolved = final_clean(resolved)
     return resolved
 
 def process_tags(filelist,take_action):
@@ -75,7 +91,6 @@ def startup():
     log = []
     settings = {}
     settings = shared.settings.read()
-    print (shared.settings.get_safe_artists())
     take_action = shared.input.truefalse(settings['take_action'])
     log.append('Searching folder: %s' % (settings['music_folder']))
     filelist = shared.file.list_path(settings['music_folder'])

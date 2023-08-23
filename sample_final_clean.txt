@@ -1,0 +1,7 @@
+# This file is meant to do final cleanup/replace tasks.
+# One task per line, delimited by || 
+# Tasks include:
+# replace: Replace an artist name to a different name (or spelling)
+# in: Replace any artist containing "text" with a different text.
+# The text to replace is not case sensitive, it is all converted to lowercase.
+# The text to replace it to is case sensitive.
