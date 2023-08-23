@@ -128,7 +128,24 @@ class file:
             delim = '/'
             pos = 1
         return f.split(delim)[pos]
+
+    def artist_album(folder):
+        f = os.path.join(folder)
+        if platform.system().lower() == 'windows':
+            delim = '\\'
+            pos = 3
+        else:
+            delim = '/'
+            pos = 2
+        return f.split(delim)[pos]
     
+    def artist_file(name):
+        f = os.path.join(name)
+        if platform.system().lower() == 'windows':
+            delim = '\\'
+        else:
+            delim = '/'
+        return f.split(delim)[-1]
 
     def list_path(path):
         filelist = []
