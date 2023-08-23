@@ -1,13 +1,5 @@
 import shared
 import music_tag
-res_list = []
-
-def test_mp3():
-    test_file = 'music/file1.mp3'
-    file = music_tag.load_file(test_file)
-    print(file['title'])
-    #for key,value in file.items():
-        #print('%s: %s' % (key,value))
 
 def ret_artist(artist):
     delims = shared.settings.get('delims')
@@ -24,8 +16,7 @@ def ret_artist(artist):
         for i in range(len(d)):
             a = a.split(d[i])[0]
         return a
-    else:
-        
+    else:        
         return artist
 
 def final_clean(artist):
@@ -49,9 +40,7 @@ def final_clean(artist):
                 artist = to
     return artist
 
-
 def resolve_tag(artist, albumartist, folder):
-    scan_log = ['','Resolving tags']
     resolved = ''
     if artist not in albumartist:
         if len(artist) > 0 and len(albumartist) == 0:
@@ -99,8 +88,6 @@ def process_tags(filelist,take_action):
                     a = shared.file.artist_album(name)
                     file['album'] = a if (a != '' and 'unknown' not in a.lower()) else resolved
 
-        if resolved not in res_list:
-            res_list.append(resolved)
         scan_log.append('Title: %s\nArtist: %s\nAlbum Artist: %s\nResolved: %s' % (title,artist,albumartist,resolved))
         scan_log.append('%spdating file: %s\n' % ('U' if take_action else '(Log Only) Not u', name))
         if take_action:
@@ -118,8 +105,6 @@ def startup():
     scan_logs,filelist = shared.file.get_music_files(filelist, settings['extensions'])
     log += scan_logs
     log += process_tags(filelist, take_action)
-    #print(res_list)
     shared.file.dump_log(settings['logfile'],log)
     
 startup()
-#test_mp3()
