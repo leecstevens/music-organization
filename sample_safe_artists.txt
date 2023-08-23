@@ -1,0 +1,2 @@
+# List your safe artist names here, one per line.
+# This file allows any artist to skip delimiter checking.
