@@ -28,7 +28,6 @@ class settings:
             tmp_settings = file.readlines()
         
             for line in tmp_settings:
-                
                 if line[0] != '#':
                     key = line.split('||')[0]
                     val = line.split('||')[1].replace('\n', '')
@@ -58,6 +57,44 @@ class format:
             re = chars[i].split(':')[1]
             item = item.replace(se, re)
         return item
+    
+    def check_case(artist,albumartist):
+        if (artist.islower() or artist.isupper()):
+            return True
+        elif (albumartist.islower() or albumartist.isupper()):
+            return True
+        else:
+            return False
+
+def convert_case(artist,albumartist):
+     #log.append('Check case %s - %s' % (artist,albumartist))
+     #print ('Check case %s - %s' % (artist,albumartist))
+     if (artist.islower() and albumartist.islower()):
+          return artist
+     elif (artist.isupper() and albumartist.isupper()):
+          return artist
+     elif (artist.islower() and not albumartist.islower()):
+          return albumartist
+     elif (artist.isupper() and not albumartist.isupper()):
+          return albumartist
+     elif (not artist.islower() and albumartist.islower()):
+          return artist
+     elif (not artist.isupper() and albumartist.isupper()):
+          return artist
+     else:
+          return artist
+
+
+    def has_delims(string):
+        delims = settings.get('delims')
+        d = []
+        for i in range(len(delims)):
+            if delims[i] in string:
+                d.append(delims[i])
+        if len(d) == 0:
+            return False
+        else:
+            return True
 
 class file:
     def artist_folder(folder):
@@ -129,6 +166,7 @@ class file:
                     newname = ''.join(fullname)+'/'+filename
                     rename_list.append(name+'||'+newname)
                     scan_log.append('Found Leading Numbered File: %s' % (name))
+
                     filelist.remove(name)        
         
         return scan_log,filelist,dupe_list,delete_list,rename_list,ignore_list
@@ -146,12 +184,14 @@ class file:
             logtext = pre+action.title()+': '
             if action == 'delete':
                 logtext += '%s' % (name)
-                os.remove(name)
+                if take_action:
+                    os.remove(name)
             elif action == 'rename':
                 src = name.split('||')[0]
                 dest = name.split('||')[1]
                 logtext += '%s to %s' % (src, dest)
-                os.rename(src, dest)
+                if take_action:
+                    os.rename(src, dest)
             logs.append(logtext)
         return logs
 

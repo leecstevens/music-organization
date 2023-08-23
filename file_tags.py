@@ -10,14 +10,22 @@ def test_mp3():
 
 def resolve_tag(artist, albumartist, composer, folder):
     scan_log = ['','Resolving tags']
+    resolved = ''
     if artist not in albumartist:
-        print('C',artist,albumartist,artist)
-        return artist
+        if len(artist) > 0 and len(albumartist) == 0:
+            resolved = artist
+        elif len(artist) == 0 and len(albumartist) == 0:
+            resolved = shared.file.artist_folder(folder)
+        elif 'unknown' in artist.lower():
+            if 'unknown' not in albumartist.lower() and len(albumartist) > 2:
+                resolved = albumartist
+        else:
+            return(artist)
+
     else:
         return artist
-        #print('N', artist,albumartist)
 
-def process_tags(filelist,take_action,chars):
+def process_tags(filelist,take_action):
     scan_log = []
     scan_log.append('Processing tags.  We will%sbe taking action on the tags.' % (' ' if take_action else ' NOT '))
     for name in filelist:
@@ -32,8 +40,6 @@ def process_tags(filelist,take_action,chars):
     return (scan_log)
 
 def startup():
-    print(shared.settings.get('delims'))
-    exit()
     log = []
     settings = {}
     settings = shared.settings.read()
@@ -43,7 +49,7 @@ def startup():
     log.append('Found %s files in the folder and subfolders.' % (len(filelist)))
     scan_logs,filelist = shared.file.get_music_files(filelist, settings['extensions'])
     log += scan_logs
-    log += process_tags(filelist, take_action, settings['replace_chars'])
+    log += process_tags(filelist, take_action)
     shared.file.dump_log(settings['logfile'],log)
     
 
