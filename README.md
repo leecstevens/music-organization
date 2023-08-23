@@ -1,5 +1,8 @@
 # music-organization
 
+Written by Lee Stevens
+Initial Release: August, 2023
+
 This was a project that was started as a "Screw You, Apple" statement after calling their support looking for a "Scorched Earth" way of organizing all of my massive music collection WITHOUT having to manually choose file by file.
 
 I was told by Apple in order to remove duplicates from my library I needed to "Command-Click" every file individually and then delete said entry from the library.
@@ -18,13 +21,13 @@ As a result, make sure you have multiple backups of your collection, as you are 
 
 # The problem statement
 
-With the file system:
+### With the file system:
 
 - Too many excess files - I had m4a and mp3 files duplicated in multiple places.
 - I had files that were stacked from "auto-copies" such as: "My Song.mp3" and "My Song 1.mp3" and "My Song 2.mp3" and so on.
 - Once going to a Mac, the .DS_Store file loves to find its way places.
 
-With the Metadata:
+### With the Metadata:
 
 - Too much going on in the Metadata to speak of.
 - Too many "like" entries as artists, such as Artist 1 would be teamed with Artist 1/Artist 2 and so forth, so it led me to have multiple artists which were really the same artist.
@@ -73,7 +76,24 @@ Since there is not much to change yet, I'll leave this blank for now.
 
 # How to use
 
-To be added here, don't get too excited yet.
+The v1 of the script has the following files you will need:
+
+Code files:
+- duplicate_files.py
+    
+    This is the script which removes duplicate files, finds system files, and looks for numbered tracks.
+
+- file_tags.py
+    
+    This is the script which analyzes your files and then determines how to tag them.
+
+- shared.py
+    
+    This is where I put common code so I wouldn't write anything twice.
+
+
+- safe_artists.txt
+This file is intended to 
 
 # Known Issues
 
