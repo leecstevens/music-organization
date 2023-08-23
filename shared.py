@@ -169,7 +169,6 @@ class file:
     
     def get_music_files(filelist, ext):
         scan_log = ['','Music File Scan']
-        print(ext)
         file_list = []
         for name in filelist:
             lower_name = name.lower()
