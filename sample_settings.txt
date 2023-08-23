@@ -4,11 +4,11 @@
 # setting:value
 # This will set the folder where your music store is.  In this case, it is under where the script is being run.
 music_folder:music
-# The extensions you have as music files.  Any other extension is an ignored file you can delete.
+# The extensions you have as music files.  Any other extension is an ignored file you can delete with del_ignorable.
 extensions:.m4a,.mp3,.wav
-# This is the name of the logfile that you want to save to (same folder as the script being run from)
+# This is the name of the logfile that you want to save to (same folder as the script being run from in this case)
 logfile:logfile.txt
-# After scanning, do you want to see the scan logs.  This is just the initial analysis.
+# After scanning, do you want to see the scan logs?  This is just the initial analysis.
 show_scanlogs:false
 # With scan_only, take_action has no effect or any cascaded options.  It is very basic scan data.
 scan_only:true
@@ -24,3 +24,9 @@ del_deletelist:true
 del_ignorable:false
 # Do you want to rename the leading numbered files the script detected?
 ren_numbered:true
+# For music tags, add delimiters
+delims||/` & `: `;`,
+# These are any characters you want to replace:what to replace it with.
+replace_chars||ü:u,ö:o,é:e,°: Degrees,á:a
+# Do you want to set artist and albumartist to the same thing?
+same_string||true

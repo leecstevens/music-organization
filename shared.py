@@ -10,12 +10,41 @@
 
 """
 
-import os, time
+import os, platform
 
 # Just to make it easy, leave any global vars at the top, so it will be easier to find.
 settings_file = 'settings.txt'
 
 class settings:
+    def get(name):
+        tmp = settings.read()
+        if tmp[name] != None:
+            return tmp[name]
+
+    def get_safe_artists():
+        try:
+            file = open('safe_artists.txt','r')
+            safe_artists = []
+            s = file.readlines()
+            for i in s:
+                if i[0] != '#':
+                    safe_artists.append(i.replace('\n', ''))
+            return tuple(safe_artists)
+        except:
+            print('No safe artists found.')
+
+    def get_final_tag_actions():
+        try:
+            file = open('final_clean.txt','r')
+            final_clean = []
+            s = file.readlines()
+            for i in s:
+                if i[0] != '#':
+                    final_clean.append(i.replace('\n', ''))
+            return tuple(final_clean)
+        except:
+            print('No safe artists found.')
+
     def read():
         ret_settings = {}
         try:
@@ -23,10 +52,14 @@ class settings:
             tmp_settings = file.readlines()
         
             for line in tmp_settings:
-                val = line
-                if val[0] != '#':
-                    ret_settings[val.split(':')[0]] = val.split(':')[1].replace('\n','')
-            
+                if line[0] != '#':
+                    key = line.split('||')[0]
+                    val = line.split('||')[1].replace('\n', '')
+                    if key.lower() == 'extensions' or key.lower() == 'replace_chars':
+                        val = tuple(val.split(','))
+                    elif key.lower() == 'delims':
+                        val = tuple(map(lambda i:i.replace('\'',''),val.split('`')))
+                    ret_settings[key] = val
             return ret_settings
         except FileNotFoundError:
             print('File is missing.  Make sure you have a %s in the script folder.' % (settings_file))
@@ -41,7 +74,79 @@ class input:
         else:
             return False
 
+class format:
+    def replace_chars(item, chars):
+        for i in range(len(chars)):
+            se = chars[i].split(':')[0]
+            re = chars[i].split(':')[1]
+            item = item.replace(se, re)
+        return item
+    
+    def check_case(artist,albumartist):
+        if (artist.islower() or artist.isupper()):
+            return True
+        elif (albumartist.islower() or albumartist.isupper()):
+            return True
+        else:
+            return False
+
+    def convert_case(artist,albumartist):
+        if (artist.islower() and albumartist.islower()):
+            return artist
+        elif (artist.isupper() and albumartist.isupper()):
+            return artist
+        elif (artist.islower() and not albumartist.islower()):
+            return albumartist
+        elif (artist.isupper() and not albumartist.isupper()):
+            return albumartist
+        elif (not artist.islower() and albumartist.islower()):
+            return artist
+        elif (not artist.isupper() and albumartist.isupper()):
+            return artist
+        else:
+            return artist
+
+
+    def has_delims(string):
+        delims = settings.get('delims')
+        d = []
+        for i in range(len(delims)):
+            if delims[i] in string:
+                d.append(delims[i])
+        if len(d) == 0:
+            return False
+        else:
+            return True
+
 class file:
+    def artist_folder(folder):
+        f = os.path.join(folder)
+        if platform.system().lower() == 'windows':
+            delim = '\\'
+            pos = 2
+        else:
+            delim = '/'
+            pos = 1
+        return f.split(delim)[pos]
+
+    def artist_album(folder):
+        f = os.path.join(folder)
+        if platform.system().lower() == 'windows':
+            delim = '\\'
+            pos = 3
+        else:
+            delim = '/'
+            pos = 2
+        return f.split(delim)[pos]
+    
+    def artist_file(name):
+        f = os.path.join(name)
+        if platform.system().lower() == 'windows':
+            delim = '\\'
+        else:
+            delim = '/'
+        return f.split(delim)[-1]
+
     def list_path(path):
         filelist = []
         for root, dirs, files in os.walk(path):
@@ -49,20 +154,28 @@ class file:
                 filelist.append(os.path.join(root,file))
         return filelist
     
+    def get_music_files(filelist, ext):
+        scan_log = ['','Music File Scan']
+        for name in filelist:
+            lower_name = name.lower()
+            if not lower_name.endswith(ext):
+                filelist.remove(name)
+        scan_log.append('Found %s files with music extensions' % (len(filelist)))
+        return scan_log, filelist
+
     def process(filelist, ext):
         dupe_list = []
         delete_list = []
         rename_list = []
         ignore_list = []
         scan_log = ['','Scan Results:']
-        extensions = tuple(list(ext.split(',')))
         for name in filelist:
             lower_name = name.lower()
             if '.ds_store' in lower_name:
                 delete_list.append(name)
                 filelist.remove(name)
                 scan_log.append('Found OS File: %s' % (name))
-            elif not lower_name.endswith(extensions):
+            elif not lower_name.endswith(ext):
                 ignore_list.append(name)
                 filelist.remove(name)
                 scan_log.append('Found Ignorable File: %s' % (name))
@@ -92,29 +205,26 @@ class file:
                     newname = ''.join(fullname)+'/'+filename
                     rename_list.append(name+'||'+newname)
                     scan_log.append('Found Leading Numbered File: %s' % (name))
+
                     filelist.remove(name)        
         
         return scan_log,filelist,dupe_list,delete_list,rename_list,ignore_list
     
     def file_action(filelist, take_action,action,type):
         logs = ['','File Action: '+action.title()+ ' of '+type.title()]
-        if take_action:
-            pre = ''
-            logs.append('Take action is enabled, we will %s files.' % (action))
-        else:
-            pre = '(Log Only) '
-            logs.append('Only logging here, not actually going to %s.' % (action))
-
+        pre = '' if take_action == True else '(Log Only) '
         for name in filelist:
             logtext = pre+action.title()+': '
             if action == 'delete':
                 logtext += '%s' % (name)
-                os.remove(name)
+                if take_action:
+                    os.remove(name)
             elif action == 'rename':
                 src = name.split('||')[0]
                 dest = name.split('||')[1]
                 logtext += '%s to %s' % (src, dest)
-                os.rename(src, dest)
+                if take_action:
+                    os.rename(src, dest)
             logs.append(logtext)
         return logs
 
