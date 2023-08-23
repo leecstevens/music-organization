@@ -1,7 +1,7 @@
 """
 
     Music Consolidation project - Lee Stevens
-    Released on the "you break something, not my fault" license.
+    Released on the "you break something, not my fault" agreement.
     
     May this be useful to you as well as a good learning tool for you.
     The main code repository if you stole / slash and hacked it is here:
