@@ -1,10 +1,6 @@
 import shared
 import music_tag
 
-safe_artists = ('Brooks & Dunn', 'Mike & The Mechanics','Peter, Paul and Mary',
-                'The Mamas & the Papas','Simon & Garfunkel','Hall & Oates', 
-                'Hootie & the Blowfish', 'Earth, Wind & Fire')
-
 def test_mp3():
     test_file = 'music/file1.mp3'
     file = music_tag.load_file(test_file)
@@ -14,6 +10,7 @@ def test_mp3():
 
 def ret_artist(artist):
     delims = shared.settings.get('delims')
+    safe_artists = shared.settings.get_safe_artists()
     for i in range(len(safe_artists)):
          if artist == safe_artists[i]:
             return artist
@@ -78,6 +75,7 @@ def startup():
     log = []
     settings = {}
     settings = shared.settings.read()
+    print (shared.settings.get_safe_artists())
     take_action = shared.input.truefalse(settings['take_action'])
     log.append('Searching folder: %s' % (settings['music_folder']))
     filelist = shared.file.list_path(settings['music_folder'])
@@ -87,6 +85,5 @@ def startup():
     log += process_tags(filelist, take_action)
     shared.file.dump_log(settings['logfile'],log)
     
-
 startup()
 #test_mp3()

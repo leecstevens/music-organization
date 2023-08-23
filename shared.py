@@ -21,6 +21,18 @@ class settings:
         if tmp[name] != None:
             return tmp[name]
 
+    def get_safe_artists():
+        try:
+            file = open('safe_artists.txt','r')
+            safe_artists = []
+            s = file.readlines()
+            for i in s:
+                if i[0] != '#':
+                    safe_artists.append(i.replace('\n', ''))
+            return tuple(safe_artists)
+        except:
+            print('No safe artists found.')
+
     def read():
         ret_settings = {}
         try:
