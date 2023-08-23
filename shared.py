@@ -34,7 +34,7 @@ class settings:
                     if key.lower() == 'extensions' or key.lower() == 'replace_chars':
                         val = tuple(val.split(','))
                     elif key.lower() == 'delims':
-                        val = tuple(map(lambda i:i.replace('\'',''),val.split(',')))
+                        val = tuple(map(lambda i:i.replace('\'',''),val.split('`')))
                     ret_settings[key] = val
             return ret_settings
         except FileNotFoundError:
@@ -66,23 +66,21 @@ class format:
         else:
             return False
 
-def convert_case(artist,albumartist):
-     #log.append('Check case %s - %s' % (artist,albumartist))
-     #print ('Check case %s - %s' % (artist,albumartist))
-     if (artist.islower() and albumartist.islower()):
-          return artist
-     elif (artist.isupper() and albumartist.isupper()):
-          return artist
-     elif (artist.islower() and not albumartist.islower()):
-          return albumartist
-     elif (artist.isupper() and not albumartist.isupper()):
-          return albumartist
-     elif (not artist.islower() and albumartist.islower()):
-          return artist
-     elif (not artist.isupper() and albumartist.isupper()):
-          return artist
-     else:
-          return artist
+    def convert_case(artist,albumartist):
+        if (artist.islower() and albumartist.islower()):
+            return artist
+        elif (artist.isupper() and albumartist.isupper()):
+            return artist
+        elif (artist.islower() and not albumartist.islower()):
+            return albumartist
+        elif (artist.isupper() and not albumartist.isupper()):
+            return albumartist
+        elif (not artist.islower() and albumartist.islower()):
+            return artist
+        elif (not artist.isupper() and albumartist.isupper()):
+            return artist
+        else:
+            return artist
 
 
     def has_delims(string):
