@@ -1,5 +1,18 @@
 """
 
+    Music Consolidation project - Lee Stevens
+    Released on the "you break something, not my fault" agreement.
+    
+    May this be useful to you as well as a good learning tool for you.
+    The main code repository if you stole / slash and hacked it is here:
+
+    https://github.com/leecstevens/music-organization
+
+    This code is meant xto be quick and dirty, I'm sure there are
+    other/better ways of doing things.  We're all IT people and have
+    our own set in our ways things.  Suggestions welcomed, but not always
+    followed.
+
     Since the music app will have several different shared features, 
     no sense in writing things twice (or more).  You agree?
 
@@ -156,12 +169,14 @@ class file:
     
     def get_music_files(filelist, ext):
         scan_log = ['','Music File Scan']
+        print(ext)
+        file_list = []
         for name in filelist:
             lower_name = name.lower()
-            if not lower_name.endswith(ext):
-                filelist.remove(name)
-        scan_log.append('Found %s files with music extensions' % (len(filelist)))
-        return scan_log, filelist
+            if lower_name.endswith(ext):
+                file_list.append(name)
+        scan_log.append('Found %s files with music extensions' % (len(file_list)))
+        return scan_log, file_list
 
     def process(filelist, ext):
         dupe_list = []

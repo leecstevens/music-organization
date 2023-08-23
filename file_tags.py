@@ -1,4 +1,5 @@
 """
+
     Music Consolidation project - Lee Stevens
     Released on the "you break something, not my fault" agreement.
     
@@ -11,6 +12,7 @@
     other/better ways of doing things.  We're all IT people and have
     our own set in our ways things.  Suggestions welcomed, but not always
     followed.
+
 """
 
 import shared
@@ -120,9 +122,9 @@ def startup():
     log.append('Searching folder: %s' % (settings['music_folder']))
     filelist = shared.file.list_path(settings['music_folder'])
     log.append('Found %s files in the folder and subfolders.' % (len(filelist)))
-    scan_logs,filelist = shared.file.get_music_files(filelist, settings['extensions'])
+    scan_logs,file_list = shared.file.get_music_files(filelist, settings['extensions'])
     log += scan_logs
-    log += process_tags(filelist, act)
+    log += process_tags(file_list, act)
     shared.file.dump_log(settings['logfile'],log)
     
 startup()
