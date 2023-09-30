@@ -1,9 +1,20 @@
 # music-organization
 
 Written by Lee Stevens
-Initial Release: August, 2023
+Initial Release: August, 2023 and ongoing
 
-So, relax people, we are at 1.0 here, so it's not going to be perfect, but worked great for me.  There's a lot in this readme, but you may find this project useful and entertaining.  If you are learning Python, educational.
+# Table Of Contents
+
+[Summary](#summary)  
+[The BIG Disclaimer](#the-big-disclaimer)  
+[The Components](#the-components)  
+[The Problem Statement](#the-problem-statement)  
+[Dependencies](#dependencies)  
+[The Settings File](#the-settings-file)  
+
+# Summary
+
+So, relax people, this is a work in progress, so it's not going to be perfect, but worked great for me.  There's a lot in this readme, but you may find this project useful and entertaining.  If you are learning Python, educational.
 
 This was a project that was started as a "Screw You, Apple" statement after calling their support looking for a "Scorched Earth" way of organizing all of my massive music collection WITHOUT having to manually choose file by file.
 
@@ -13,24 +24,31 @@ After a great workout session for my eyelids rolling my eyes, I determined this 
 
 By the way, to scorch the data in Apple Music, just go to the song view, select all your songs, and delete from library, and yes, add to the trash.  Hope you read this part before doing the former...  You better have a backup of your file system with all your music in it first.  :)
 
-# Before you begin - IMPORTANT
+# The BIG Disclaimer
 
-## This is a powerful piece of code, and will screw you over if you let it and are not careful, keep reading below.  I know we all hate text walls, but it will be the difference in swearing by me rather than at me in the future.
+## Some of these components (like what deletes files) are powerful pieces of code, and are consdidered destructive code.  
+
+### Enjoy the code, but...  
+If you are not careful, this code will screw you over if you let it and are not careful.  I know we all hate text walls, but it will be the difference in swearing by me rather than at me in the future.
+
+This is why I included a table of contents, it is a big file.
 
 This code was written for me, and as such I have no regard for you or your situation.  I was out to solve my own problem, as you are out to solve yours (or stalk my repository looking to steal code).
 
 As a result, make sure you have multiple backups of your collection, as you are likely going to screw something up.  This is not a challenge or a call to be better, this is a simple warning not to be stupid.  I won't be liable for your stupidity, lack thereof, or any emotion besides gratitude you have for this free code I'm giving to the world of my own kindness.
 
-# The problem statement
+# The Components:  
+- Duplicate Files (duplicate_files.py): This looks for relevant files on disk and only catalogs music files of your choosing.  It has an option to delete other files that are extra/not needed.  
+- File Tags (file_tags.py): This is just to retag artists and clean up metadata for all those music files.  Did wonders in my Apple Music collection.
+- Lyrics (lyrics.py): This will scrape the internet looking for lyrics.  Not a perfect solution, but does a pretty good job if you want to mass add lyrics.
 
-### With the file system:
-
+# The problem statement  
+### With the file system:  
 - Too many excess files - I had m4a and mp3 files duplicated in multiple places.
 - I had files that were stacked from "auto-copies" such as: "My Song.mp3" and "My Song 1.mp3" and "My Song 2.mp3" and so on.
 - Once going to a Mac, the .DS_Store file loves to find its way places.
 
-### With the Metadata:
-
+### With the Metadata:  
 - Too much going on in the Metadata to speak of.
 - Too many "like" entries as artists, such as Artist 1 would be teamed with Artist 1/Artist 2 and so forth, so it led me to have multiple artists which were really the same artist.
 - Too many "Unknown" or "Various" artists, so clean them up and change the metadata to add them to the MP3 metadata.  After all, who doesn't love organizing with every box marked "Miscellaneous"?  Yeah, didn't think so.
@@ -41,21 +59,13 @@ As a result, make sure you have multiple backups of your collection, as you are 
 
 I'm sure more will come up over time, but this is my first thoughts.
 
-# The real problem statement
-
+### The real problem statement  
 I am someone who badly neglected their digital music collection for over 20 years, so now enough is enough.
 
-# Dependencies
+Now, I am releasing a bunch of tools I am creating for me so others can use them as starter, learn Python, or (let's go there) steal it and call it their own.  Maybe all of the above.
 
-There is one dependency, music_tag which is installable by pip.  This is only needed if you want to do the MP3 tagging.  It is part of the file_tags.py file, and kept it away as a shared component.  Then again, if you don't want to do MP3 tagging, why are you using this repo or wanting this code?
-
-Well, the file cleanup is free from needing music_tag at least.
-
-# Lastly...
-
-Enjoy the code, but again, don't just run it.  If bad things happen to you, I will laugh at your complaints and cries.  If you were stupid enough not to play with safe data, there is really no hope for you or your music collection.  Did I drive that home enough?
-
-It is my hope this code will be a benefit to you, and to those of you learning Python, something to learn from.
+# Dependencies  
+- music_tag: Installed by pip, and used in mp3 tagging inside the shared component.
 
 # Screenshots of use/features
 
@@ -77,20 +87,19 @@ The settings are configured in a simple text file (included as a sample in the r
 Since there is not much to change yet, I'll leave this blank for now.
 
 # How to use
-
-The v1 of the script has the following files you will need:
+These are the files in total included in the repo:
 
 ### Code files:
-- duplicate_files.py
-    
+- duplicate_files.py  
     This is the script which removes duplicate files, finds system files, and looks for numbered tracks.
 
-- file_tags.py
-    
+- file_tags.py  
     This is the script which analyzes your files and then determines how to tag them.
 
-- shared.py
-    
+- lyrics.py  
+    This is intended to scrape a web service looking for lyrics for your tracks on a "best guess" basis.
+
+- shared.py  
     This is where I put common code so I wouldn't write anything twice.
 
 ### Configuration Files
@@ -98,6 +107,9 @@ The v1 of the script has the following files you will need:
 - settings.txt
 
     This is the main settings file.  There are comments documenting its use in the file, and a sample of said file is included.
+
+### The Settings File in more detail  
+To be continued, I know this readme will be behind the code.  Don't we all love documentation duty?
 
 - safe_artists.txt
 

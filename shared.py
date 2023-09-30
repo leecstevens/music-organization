@@ -46,6 +46,18 @@ class settings:
         except:
             print('No safe artists found.')
 
+    def get_skip_artists():
+        try:
+            file = open('skip_artists.txt','r')
+            skip_artists = []
+            s = file.readlines()
+            for i in s:
+                if i[0] != '#':
+                    skip_artists.append(i.replace('\n', ''))
+            return tuple(skip_artists)
+        except:
+            print('No safe artists found.')
+
     def get_final_tag_actions():
         try:
             file = open('final_clean.txt','r')
@@ -176,6 +188,15 @@ class file:
                 file_list.append(name)
         scan_log.append('Found %s files with music extensions' % (len(file_list)))
         return scan_log, file_list
+
+    def remove_skipped_artists(filelist):
+        skip_folders = list(settings.get_skip_artists())
+        print(skip_folders)
+        for item in filelist:
+            #print(file.artist_folder(item))
+            if file.artist_folder(item) in skip_folders:
+                filelist.remove(item)
+        return filelist
 
     def process(filelist, ext):
         dupe_list = []
