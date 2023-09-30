@@ -7,6 +7,7 @@
     The main code repository if you stole / slash and hacked it is here:
 
     https://github.com/leecstevens/music-organization
+    (The readme file is always your friend here)
 
     This code is meant xto be quick and dirty, I'm sure there are
     other/better ways of doing things.  We're all IT people and have
