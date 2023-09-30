@@ -121,7 +121,7 @@ def startup():
     take_action = shared.input.truefalse(settings['take_action'])
     act = True if take_action == True or scan_only == False else False
     log.append('Searching folder: %s' % (settings['music_folder']))
-    filelist = shared.file.list_path(settings['music_folder'])
+    filelist = shared.file.list_path(settings['music_folder'],False)
     log.append('Found %s files in the folder and subfolders.' % (len(filelist)))
     scan_logs,file_list = shared.file.get_music_files(filelist, settings['extensions'])
     log += scan_logs

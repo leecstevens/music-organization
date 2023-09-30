@@ -25,6 +25,7 @@
 """
 
 import os, platform
+import sqlite3
 
 # Just to make it easy, leave any global vars at the top, so it will be easier to find.
 settings_file = 'settings.txt'
@@ -78,20 +79,22 @@ class settings:
             tmp_settings = file.readlines()
         
             for line in tmp_settings:
-                if line[0] != '#':
-                    key = line.split('||')[0]
-                    val = line.split('||')[1].replace('\n', '')
-                    if key.lower() == 'extensions' or key.lower() == 'replace_chars':
-                        val = tuple(val.split(','))
-                    elif key.lower() == 'delims':
-                        val = tuple(map(lambda i:i.replace('\'',''),val.split('`')))
-                    ret_settings[key] = val
+                if line.strip() != '':
+                    if line[0] != '#':
+                        key = line.split('||')[0]
+                        val = line.split('||')[1].replace('\n', '')
+                        if key.lower() == 'extensions' or key.lower() == 'replace_chars':
+                            val = tuple(val.split(','))
+                        elif key.lower() == 'delims':
+                            val = tuple(map(lambda i:i.replace('\'',''),val.split('`')))
+                        ret_settings[key] = val
             return ret_settings
         except FileNotFoundError:
             print('File is missing.  Make sure you have a %s in the script folder.' % (settings_file))
         except:
-            print('Something is really messed up beyond a standard file not found.\nLooking for %s.' % (settings_file))
-
+            print('Something is really messed up beyond a standard file not found.\nLooking for %s.' % (settings_file))            
+        finally:
+            pass
 class input:
     def truefalse(answer):
         a = answer.lower()
@@ -173,11 +176,18 @@ class file:
             delim = '/'
         return f.split(delim)[-1]
 
-    def list_path(path):
+    def list_path(path,checkext):
         filelist = []
+        ext = settings.get('extensions')
         for root, dirs, files in os.walk(path):
             for file in files:
-                filelist.append(os.path.join(root,file))
+                filepath = os.path.join(root,file)
+                if checkext:
+                    if filepath.endswith(ext):
+                        filelist.append(filepath)
+                else:
+                    filelist.append(filepath)
+
         return filelist
     
     def get_music_files(filelist, ext):
@@ -269,3 +279,7 @@ class file:
         for item in log:
             log_file.write(item+'\n')
         log_file.close() 
+
+class sqlite:
+    def connect(connection):
+        return sqlite3.connect(connection)
