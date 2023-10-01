@@ -11,3 +11,4 @@ final_clean.txt
 tmp/
 skip_artists.txt
 music*.db
+secrets.py
