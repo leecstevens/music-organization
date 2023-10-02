@@ -25,7 +25,9 @@
 """
 
 import os, platform
+import local
 import sqlite3
+import pymysql
 
 # Just to make it easy, leave any global vars at the top, so it will be easier to find.
 settings_file = 'settings.txt'
@@ -283,3 +285,66 @@ class file:
 class sqlite:
     def connect(connection):
         return sqlite3.connect(connection)
+
+class mysql:
+    def return_table(sql):
+        records = []
+        creds = local.db.ret_mysql()
+        conn = pymysql.connect(
+            host = creds['hostname'],
+            user = creds['username'],
+            password = creds['user_password'],
+            db = creds['database_name']
+        )
+        try:
+            with conn:
+                cursor = conn.cursor()
+                cursor.execute(sql)
+                records = cursor.fetchall()
+        except Exception as e:
+            print('Error in table fetch: %s' % (e))
+        else:
+            try:
+                cursor.close()
+                conn.close()
+            finally:
+                pass
+        finally:
+            return records
+
+    def execute(q,connection):
+        try:
+            conn = connection
+            cursor = conn.cursor()
+            cursor.execute(q)
+            conn.commit()
+            for result in cursor.fetchall():
+                print(result)
+        except Exception as e:
+            print('Error MySQL execute one: %s' % (e))
+        finally:
+            conn.close()        
+
+    def execute_many_sp(sql, qlist):
+        creds = local.db.ret_mysql()
+        conn = pymysql.connect(
+            host = creds['hostname'],
+            user = creds['username'],
+            password = creds['user_password'],
+            db = creds['database_name']
+        )
+        try:
+            with conn:
+                cursor = conn.cursor()
+                cursor.executemany(sql,qlist)
+                conn.commit()
+        except Exception as e:
+            print('Error executing execmany: %s' % (e))
+        finally:
+            try:
+                cursor.close()
+                conn.close()
+            except:
+                pass
+            finally:
+                pass

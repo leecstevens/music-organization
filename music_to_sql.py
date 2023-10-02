@@ -16,25 +16,104 @@
 
 """
 
-import shared
+import shared, secrets
 import sqlite3
 import re, os
 import music_tag
 from mutagen.mp3 import MP3
 
 all_artists = []
-diff_artists = []
 all_titles = []
-diff_titles = []
 all_albums = []
-diff_albums = []
 all_paths = []
-diff_paths = []
-all_names = []
-diff_names = []
+all_filenames = []
 
 class cache:
+    def build_cache():
+        records = shared.mysql.return_table('select id,name from music_artists')
+        for record in records:
+            all_artists.append(record[0])
+            all_artists.append(record[1])
+        print('Artists cached: %s' % (len(all_artists)))
+        records = shared.mysql.return_table('select id,name from music_albums')
+        for record in records:
+            all_albums.append(record[0])
+            all_albums.append(record[1])
+        print('Albums cached: %s' % (len(all_albums)))
+        records = shared.mysql.return_table('select id,name from music_titles')
+        for record in records:
+            all_titles.append(record[0])
+            all_titles.append(record[1])
+        print('Titles cached: %s' % (len(all_titles)))
+        records = shared.mysql.return_table('select id, name from music_paths')
+        for record in records:
+            all_paths.append(record[0])
+            all_paths.append(record[1])
+        print('Paths cached: %s' % (len(all_paths)))
+        records = shared.mysql.return_table('select id, name from music_filenames')
+        for record in records:
+            all_filenames.append(record[0])
+            all_filenames.append(record[1])
+        print('File names cached: %s' % (len(all_filenames)))
+
+    def read_cache():
+        pass
+
+    def commit_tracks(thelist):
+        data = []
+        print('Reading all the tracks to commit')
+        for file in thelist:
+            path = os.path.split(file)[0]
+            name = os.path.split(file)[1]
+            track = get_song_data(file)
+            try:
+                artist = all_artists[all_artists.index(track['artist'])-1]
+            except ValueError:
+                artist = -1
+            
+            try:
+                album = all_albums[all_albums.index(track['album'])-1]
+            except ValueError:
+                album = -1
+
+            try:
+                title = all_titles[all_titles.index(track['title'])-1]
+            except ValueError:
+                title = -1
+
+            try:
+                filepath = all_paths[all_paths.index(path)]-1
+            except ValueError:
+                filepath = -1
+
+            try:
+                filename = all_filenames[all_filenames.index(name)]-1
+            except ValueError:
+                filename = -1
+
+            data_tup = (artist, album, title, int(track['length']), 
+                        int(track['bitrate']), filepath, filename,track['lyrics'])
+            data.append(data_tup)
+
+        print ('Committing tracks')
+        sql = ('call sp_add_track (%s,%s,%s,%s,%s,%s,%s,%s)')
+        
+        print(sql,'\n',data)
+        
+        #data = list([(item,) for item in diff_artists])
+        shared.mysql.execute_many_sp(sql,data)
+        data = []
+
+            
+
     def prep_cache(thelist):
+        print('Reading all the tracks to cache')
+        diff_artists = []
+        diff_titles = []
+        diff_albums = []
+        diff_paths = []
+        diff_filenames = []
+        
         for file in thelist:
             path = os.path.split(file)[0]
             name = os.path.split(file)[1]
@@ -51,10 +130,39 @@ class cache:
             if path not in all_paths:
                 if path not in diff_paths:
                     diff_paths.append(path)
-            if name not in all_names:
-                if path not in diff_names:
-                    diff_names.append(name)
-
+            if name not in all_filenames:
+                if path not in diff_filenames:
+                    diff_filenames.append(name)
+        
+        print ('Committing artists...')
+        sql = ('call sp_add_artist (%s)')
+        data = list([(item,) for item in diff_artists])
+        shared.mysql.execute_many_sp(sql,data)
+        diff_artists=[]
+        
+        print ('Committing albums...')
+        sql = ('call sp_add_album (%s)')
+        data = list([(item,) for item in diff_albums])
+        shared.mysql.execute_many_sp(sql,data)
+        diff_albums=[]
+        
+        print ('Committing titles...')
+        sql = ('call sp_add_title (%s)')
+        data = list([(item,) for item in diff_titles])
+        shared.mysql.execute_many_sp(sql,data)
+        diff_titles=[]
+        
+        print ('Committing paths...')
+        sql = ('call sp_add_path (%s)')
+        data = list([(item,) for item in diff_paths])
+        shared.mysql.execute_many_sp(sql,data)
+        diff_paths=[]
+        
+        print ('Committing file names...')
+        sql = ('call sp_add_filename (%s)')
+        data = list([(item,) for item in diff_filenames])
+        shared.mysql.execute_many_sp(sql,data)
+        diff_filenames=[]
 
 def convert_length(length):
     pass
@@ -77,6 +185,7 @@ def clean_song_data(lyric):
         lyric = lyric[:-trimnum]
     lyric = lyric.replace('<br>You might also like','<br>')
     lyric = lyric.replace('<br><br>','<br>')
+    lyric = lyric.replace(')You might also like',')')
     return lyric
 
 def get_song_data(file):
@@ -95,16 +204,18 @@ def get_song_data(file):
     return song
 
 music_folder = shared.settings.get('music_folder')
-dbname = shared.settings.get('sqlitedb')
-conn = shared.sqlite.connect(dbname)
+#dbname = shared.settings.get('sqlitedb')
+#conn = shared.sqlite.connect(dbname)
 filelist = shared.file.list_path(music_folder,True)
+filelist = filelist[455:457]
+cache.build_cache()
 cache.prep_cache(filelist)
+cache.commit_tracks(filelist)
 print('Tracks: %s\nUnique Artists: %s\nUnique Albums: %s\nUnique Titles: %s\nUnique Paths: %s\nUnique Names: %s' % (
     len(filelist),
-    len(all_artists)+len(diff_artists),
-    len(all_albums)+len(diff_albums),
-    len(all_titles)+len(diff_titles),
-    len(all_paths)+len(diff_paths),
-    len(all_names)+len(diff_names)
+    len(all_artists),
+    len(all_albums),
+    len(all_titles),
+    len(all_paths),
+    len(all_filenames)
 ))
-conn.close()
