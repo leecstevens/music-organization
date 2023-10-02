@@ -10,3 +10,5 @@ safe_artists.txt
 final_clean.txt
 tmp/
 skip_artists.txt
+music*.db
+local.py

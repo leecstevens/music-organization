@@ -7,6 +7,7 @@
     The main code repository if you stole / slash and hacked it is here:
 
     https://github.com/leecstevens/music-organization
+    (The readme file is always your friend here)
 
     This code is meant xto be quick and dirty, I'm sure there are
     other/better ways of doing things.  We're all IT people and have
@@ -24,6 +25,9 @@
 """
 
 import os, platform
+import local
+import sqlite3
+import pymysql
 
 # Just to make it easy, leave any global vars at the top, so it will be easier to find.
 settings_file = 'settings.txt'
@@ -77,20 +81,22 @@ class settings:
             tmp_settings = file.readlines()
         
             for line in tmp_settings:
-                if line[0] != '#':
-                    key = line.split('||')[0]
-                    val = line.split('||')[1].replace('\n', '')
-                    if key.lower() == 'extensions' or key.lower() == 'replace_chars':
-                        val = tuple(val.split(','))
-                    elif key.lower() == 'delims':
-                        val = tuple(map(lambda i:i.replace('\'',''),val.split('`')))
-                    ret_settings[key] = val
+                if line.strip() != '':
+                    if line[0] != '#':
+                        key = line.split('||')[0]
+                        val = line.split('||')[1].replace('\n', '')
+                        if key.lower() == 'extensions' or key.lower() == 'replace_chars':
+                            val = tuple(val.split(','))
+                        elif key.lower() == 'delims':
+                            val = tuple(map(lambda i:i.replace('\'',''),val.split('`')))
+                        ret_settings[key] = val
             return ret_settings
         except FileNotFoundError:
             print('File is missing.  Make sure you have a %s in the script folder.' % (settings_file))
         except:
-            print('Something is really messed up beyond a standard file not found.\nLooking for %s.' % (settings_file))
-
+            print('Something is really messed up beyond a standard file not found.\nLooking for %s.' % (settings_file))            
+        finally:
+            pass
 class input:
     def truefalse(answer):
         a = answer.lower()
@@ -172,11 +178,18 @@ class file:
             delim = '/'
         return f.split(delim)[-1]
 
-    def list_path(path):
+    def list_path(path,checkext):
         filelist = []
+        ext = settings.get('extensions')
         for root, dirs, files in os.walk(path):
             for file in files:
-                filelist.append(os.path.join(root,file))
+                filepath = os.path.join(root,file)
+                if checkext:
+                    if filepath.endswith(ext):
+                        filelist.append(filepath)
+                else:
+                    filelist.append(filepath)
+
         return filelist
     
     def get_music_files(filelist, ext):
@@ -268,3 +281,70 @@ class file:
         for item in log:
             log_file.write(item+'\n')
         log_file.close() 
+
+class sqlite:
+    def connect(connection):
+        return sqlite3.connect(connection)
+
+class mysql:
+    def return_table(sql):
+        records = []
+        creds = local.db.ret_mysql()
+        conn = pymysql.connect(
+            host = creds['hostname'],
+            user = creds['username'],
+            password = creds['user_password'],
+            db = creds['database_name']
+        )
+        try:
+            with conn:
+                cursor = conn.cursor()
+                cursor.execute(sql)
+                records = cursor.fetchall()
+        except Exception as e:
+            print('Error in table fetch: %s' % (e))
+        else:
+            try:
+                cursor.close()
+                conn.close()
+            finally:
+                pass
+        finally:
+            return records
+
+    def execute(q,connection):
+        try:
+            conn = connection
+            cursor = conn.cursor()
+            cursor.execute(q)
+            conn.commit()
+            for result in cursor.fetchall():
+                print(result)
+        except Exception as e:
+            print('Error MySQL execute one: %s' % (e))
+        finally:
+            conn.close()        
+
+    def execute_many_sp(sql, qlist):
+        creds = local.db.ret_mysql()
+        conn = pymysql.connect(
+            host = creds['hostname'],
+            user = creds['username'],
+            password = creds['user_password'],
+            db = creds['database_name']
+        )
+        try:
+            with conn:
+                cursor = conn.cursor()
+                cursor.executemany(sql,qlist)
+                conn.commit()
+        except Exception as e:
+            print('Error executing execmany: %s' % (e))
+        finally:
+            try:
+                cursor.close()
+                conn.close()
+            except:
+                pass
+            finally:
+                pass
