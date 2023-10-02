@@ -16,8 +16,7 @@
 
 """
 
-import shared, secrets
-import sqlite3
+import shared
 import re, os
 import music_tag
 from mutagen.mp3 import MP3
@@ -82,12 +81,12 @@ class cache:
                 title = -1
 
             try:
-                filepath = all_paths[all_paths.index(path)]-1
+                filepath = all_paths[all_paths.index(path)-1]
             except ValueError:
                 filepath = -1
 
             try:
-                filename = all_filenames[all_filenames.index(name)]-1
+                filename = all_filenames[all_filenames.index(name)-1]
             except ValueError:
                 filename = -1
 
@@ -204,10 +203,8 @@ def get_song_data(file):
     return song
 
 music_folder = shared.settings.get('music_folder')
-#dbname = shared.settings.get('sqlitedb')
-#conn = shared.sqlite.connect(dbname)
 filelist = shared.file.list_path(music_folder,True)
-filelist = filelist[455:457]
+#filelist = filelist[455:457]
 cache.build_cache()
 cache.prep_cache(filelist)
 cache.commit_tracks(filelist)
