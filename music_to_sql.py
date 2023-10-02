@@ -96,14 +96,8 @@ class cache:
 
         print ('Committing tracks')
         sql = ('call sp_add_track (%s,%s,%s,%s,%s,%s,%s,%s)')
-        
-        print(sql,'\n',data)
-        
-        #data = list([(item,) for item in diff_artists])
         shared.mysql.execute_many_sp(sql,data)
         data = []
-
-            
 
     def prep_cache(thelist):
         print('Reading all the tracks to cache')
